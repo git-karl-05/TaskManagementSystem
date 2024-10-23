@@ -4,16 +4,17 @@ package com.kai.TaskManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("api/task")
 public class TaskController {
 
-    private TaskService taskService;
+    private final TaskDAOImpl taskService;
 
     @Autowired
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskDAOImpl taskService) {
         this.taskService = taskService;
     }
 
@@ -25,13 +26,21 @@ public class TaskController {
     * */
 
     @PostMapping("/create")
-    public Task createTask(@RequestBody Task task) {
-        return taskService.save(task);
+    public TaskDTO createTask(@RequestBody TaskDTO taskDTO) {
+        Task task = TaskMapper.toEntity(taskDTO);
+        Task savedTask = taskService.save(task);
+        return TaskMapper.toDTO(savedTask);
     }
 
     @GetMapping("/allTasks")
-    public List<Task> getAllTasks() {
-        return taskService.findAllTasks();
+    public List<TaskDTO> getAllTasks() {
+        List<Task> tasks = taskService.findAllTasks();
+        List<TaskDTO> taskDTOs = new ArrayList<>();
+
+        for (Task task : tasks) {
+            TaskDTO taskDTO = TaskMapper.toDTO(task);
+            taskDTOs.add(taskDTO);
+        } return taskDTOs;
     }
 
     @GetMapping("/{taskName}")
@@ -40,7 +49,8 @@ public class TaskController {
     }
 
     @PutMapping("/update")
-    public void updateTask(@RequestBody Task task) {
+    public void updateTask(@RequestBody TaskDTO taskDTO) {
+        Task task = TaskMapper.toEntity(taskDTO);
         taskService.update(task);
     }
 

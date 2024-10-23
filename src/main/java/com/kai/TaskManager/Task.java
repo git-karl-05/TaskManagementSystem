@@ -9,7 +9,6 @@ public class Task {
     private boolean completed;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-
     public Task() {}
 
     public Task(String name, String description, boolean completed) {

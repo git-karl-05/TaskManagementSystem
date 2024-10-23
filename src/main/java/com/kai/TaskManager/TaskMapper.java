@@ -5,15 +5,15 @@ public class TaskMapper {
         return new TaskDTO(
                 task.getId();
                 task.getName();
-                task.isCompleted()
-        );
+                task.isCompleted();
+        )
     }
 
     public static Task toEntity(TaskDTO taskDTO) {
         Task task = new Task();
         task.setId(taskDTO.getId());
         task.setName(taskDTO.getName());
-        task.setDescription(taskDTO.getDescription);
+        task.setDescription(taskDTO.getDescription());
         task.setCompleted(taskDTO.isCompleted());
         return task;
     }

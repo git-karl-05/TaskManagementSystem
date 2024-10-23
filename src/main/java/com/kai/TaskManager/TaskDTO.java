@@ -1,15 +1,15 @@
 package com.kai.TaskManager;
 
-public class TaskDetailsDTO {
+public class TaskDTO {
     private Long id;
     private String name;
     private String description;
     private boolean completed;
 
 
-    public TaskDetailsDTO() {}
+    public TaskDTO() {}
 
-    public TaskDetailsDTO(String name, String description, boolean completed) {
+    public TaskDTO(String name, String description, boolean completed) {
         this.name = name;
         this.description = description;
         this.completed = completed;
