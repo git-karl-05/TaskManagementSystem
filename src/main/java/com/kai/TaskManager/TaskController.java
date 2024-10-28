@@ -1,7 +1,10 @@
 package com.kai.TaskManager;
 
 
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -11,52 +14,49 @@ import java.util.List;
 @RequestMapping("api/task")
 public class TaskController {
 
-    private final TaskDAOImpl taskService;
+    private final TaskService taskService;
 
     @Autowired
-    public TaskController(TaskDAOImpl taskService) {
+    public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
 
-    /*
-    * create = POST
-    * read = GET
-    * update = PUT
-    * delete = DELETE
-    * */
-
     @PostMapping("/create")
-    public TaskDTO createTask(@RequestBody TaskDTO taskDTO) {
-        Task task = TaskMapper.toEntity(taskDTO);
-        Task savedTask = taskService.save(task);
-        return TaskMapper.toDTO(savedTask);
+    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDTO) {
+        TaskDTO createdTaskDTO = taskService.save(taskDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTaskDTO);
     }
 
     @GetMapping("/allTasks")
-    public List<TaskDTO> getAllTasks() {
-        List<Task> tasks = taskService.findAllTasks();
-        List<TaskDTO> taskDTOs = new ArrayList<>();
-
-        for (Task task : tasks) {
-            TaskDTO taskDTO = TaskMapper.toDTO(task);
-            taskDTOs.add(taskDTO);
-        } return taskDTOs;
+    public ResponseEntity<List<TaskDTO>> getAllTasks() {
+        List<TaskDTO> taskDTOs = taskService.findAllTasks();
+        if (taskDTOs != null) {
+            return ResponseEntity.ok(taskDTOs);
+        } else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
     }
 
-    @GetMapping("/{taskName}")
-    public Task getTaskByName(@PathVariable String taskName) {
-        return taskService.findTaskByName(taskName);
+    @GetMapping("/{name}")
+    public ResponseEntity<TaskDTO> getTaskByName(@PathVariable String name) {
+        TaskDTO taskDTO =  taskService.findByTaskName(name);
+        if (taskDTO != null) {
+            return ResponseEntity.ok(taskDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
     }
 
     @PutMapping("/update")
-    public void updateTask(@RequestBody TaskDTO taskDTO) {
-        Task task = TaskMapper.toEntity(taskDTO);
-        taskService.update(task);
+    public ResponseEntity<Void> updateTask(@RequestBody TaskDTO taskDTO) {
+        taskService.update(taskDTO);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
     }
 
-    @DeleteMapping("/delete")
-    public void deleteTask(@PathVariable String name) {
+    @DeleteMapping("/delete/{name}")
+    public ResponseEntity<Void> deleteTask(@PathVariable String name) {
         taskService.delete(name);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 }

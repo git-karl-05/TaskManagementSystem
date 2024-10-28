@@ -6,9 +6,6 @@ public class TaskDTO {
     private String description;
     private boolean completed;
 
-
-    public TaskDTO() {}
-
     public TaskDTO(String name, String description, boolean completed) {
         this.name = name;
         this.description = description;
