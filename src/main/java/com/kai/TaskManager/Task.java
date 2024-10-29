@@ -3,12 +3,17 @@ package com.kai.TaskManager;
 import java.sql.Timestamp;
 
 public class Task {
+    public enum PriorityLevel {
+        LOW, MEDIUM, HIGH;
+    }
     private Long id;
     private String name;
     private String description;
     private boolean completed;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private PriorityLevel priority;
+    private Timestamp dueDate;
 
     public Task() {}
 
@@ -16,6 +21,17 @@ public class Task {
         this.name = name;
         this.description = description;
         this.completed = completed;
+        this.priority = null;
+        this.dueDate = null;
+    }
+
+    public Task(String name, String description, boolean completed, PriorityLevel priority,
+                Timestamp dueDate) {
+        this.name = name;
+        this.description = description;
+        this.completed = completed;
+        this.priority = priority;
+        this.dueDate = dueDate;
     }
 
     public Long getId() {
@@ -41,5 +57,17 @@ public class Task {
     }
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+    public PriorityLevel getPriority() {
+        return this.priority;
+    }
+    public void setPriority(PriorityLevel priority) {
+        this.priority = priority;
+    }
+    public Timestamp getDueDate() {
+        return this.dueDate;
+    }
+    public void setDueDate(Timestamp dueDate) {
+        this.dueDate = dueDate;
     }
 }
